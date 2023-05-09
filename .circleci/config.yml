@@ -41,7 +41,7 @@ jobs:
           name: Set COMMITTED_DIRS environment variable
           command: !
              echo "COMMITTED_DIRS=$COMMITTED_DIRS" >> $BASH_ENV
-             echo "COMMITTED_DIRS=$COMMITTED_DIRS" 
+             echo $COMMITTED_DIRS 
           # This sets the COMMITTED_DIRS environment variable
 
 # Orchestrate jobs using workflows
