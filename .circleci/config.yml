@@ -18,6 +18,30 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
 
+      # Get the list of changed files in the commit
+      - run:
+          name: Get committed file paths
+          command: |
+            CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r $CIRCLE_SHA1)
+
+      # Parse the file paths to get the directory paths
+      - run:
+          name: Parse directory paths
+          command: |
+            COMMITTED_DIRS=""
+            for FILE_PATH in $CHANGED_FILES; do
+              DIR_PATH=$(dirname "$FILE_PATH")
+              if [[ ! $COMMITTED_DIRS =~ $DIR_PATH ]]; then
+                COMMITTED_DIRS="$COMMITTED_DIRS $DIR_PATH"
+              fi
+            done
+
+      # Set the COMMITTED_DIRS environment variable
+      - run:
+          name: Set COMMITTED_DIRS environment variable
+          command: echo "COMMITTED_DIRS=$COMMITTED_DIRS" >> $BASH_ENV
+          # This sets the COMMITTED_DIRS environment variable
+
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
